@@ -1,2 +1,3 @@
 *.pyc
 logs
+llnux_lend/db_settings.py
