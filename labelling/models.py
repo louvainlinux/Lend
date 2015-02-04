@@ -25,17 +25,18 @@ class Label(models.Model):
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
     contained_by = models.ForeignKey('Label', null=True, blank=True, default=None)
+    borrowed = models.ForeignKey('Lending',related_name='borrowed_labels',null=True,blank=True,default=None)
 
     def __str__(self):
         return "{} {}".format(str(self.id).zfill(6), self.name)
 
 
-@receiver(post_save, sender=Label)
-def autoprint(instance, created, **kwargs):
-    printer_name = Config.objects.get(pk='printer_name')
-    printer_uri = Config.objects.get(pk='printer_uri')
-    if created:
-        generator.print_label(generator.generate_label(instance.id), printer_name.value, printer_uri.value)
+#@receiver(post_save, sender=Label)
+#def autoprint(instance, created, **kwargs):
+#    printer_name = Config.objects.get(pk='printer_name')
+#    printer_uri = Config.objects.get(pk='printer_uri')
+#    if created:
+#        generator.print_label(generator.generate_label(instance.id), printer_name.value, printer_uri.value)
 
 
 class EquipmentType(MPTTModel):
@@ -56,6 +57,7 @@ class Equipment(models.Model):
     notes = models.TextField(default="")
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+    borrowed = models.ForeignKey('Lending',related_name='borrowed_equipments',null=True,blank=True,default=None)
 
     def __str__(self):
         return self.name
@@ -83,7 +85,6 @@ class Borrower(models.Model):
 
 
 class Lending(models.Model):
-    label = models.ForeignKey('Label')
     borrower = models.ForeignKey('Borrower')
 
     start = models.DateField()
@@ -96,12 +97,12 @@ class Lending(models.Model):
     deposit_kept = models.DecimalField(default=None, blank=True, null=True, max_digits=6, decimal_places=2)
 
     def __str__(self):
-        return str(self.label)
+        return str(self.borrower)+str(self.pk)
 
 
 class Config(models.Model):
-    name = models.TextField(primary_key=True)
-    value = models.TextField()
+    name = models.CharField(max_length=200, primary_key=True)
+    value = models.CharField(max_length=200)
 
     def __str__(self):
         return str(self.name)

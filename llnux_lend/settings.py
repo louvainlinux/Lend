@@ -37,10 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'labelling',
-    'mptt'
+    'mptt',
+    'chosenadmin'
 )
 
 MIDDLEWARE_CLASSES = (
+    'chosenadmin.middleware.ChosenAdminMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,9 +61,17 @@ WSGI_APPLICATION = 'llnux_lend.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'lend',
+        'USER': 'extern',
+        'PASSWORD': 'VPttyvkrRnkkHyej',
+        'HOST': '92.222.39.45',
+        'PORT': '3309'
     }
 }
 

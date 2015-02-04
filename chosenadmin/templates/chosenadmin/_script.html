@@ -1,0 +1,34 @@
+{% comment %}
+
+NOTE: This template embeds the minified version of the Chosen plugin.
+
+Additionally, there is a document-ready block of code (at the bottom) that
+initializes the plugin and hacks a few of Django's default CSS styles.
+
+This all gets included inline at the bottom of the page, right before the
+closing </body> tag.
+
+{% endcomment %}
+
+<script type="text/javascript">
+jQuery = jQuery ? jQuery : django.jQuery;
+var $ = jQuery ? jQuery : django.jQuery;
+{{ chosen_js }}
+
+{# ------ Selector to replace <select> elements with chosen ------ #}
+$(document).ready(function() {
+  // Ugh. Make sure django admin's custom multi-select widget loads, then
+  // ignore it.
+  setTimeout(function(){
+    $("select").not(".filtered").chosen();
+  }, 500);
+
+  // Tweak the CSS for any parent of a Chosen widget.
+  setTimeout(function() {
+    $(".chosen-container").parents(".form-row").css({
+      "position": "relative",
+      "overflow": "visible"
+    });
+  }, 1000);
+});
+</script></body>
